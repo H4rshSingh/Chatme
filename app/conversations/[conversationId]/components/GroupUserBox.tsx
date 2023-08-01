@@ -6,8 +6,6 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import Avatar from "@/app/components/Avatar";
 import { BsChatDots } from "react-icons/bs";
-import { useSession } from "next-auth/react";
-
 interface GroupUserProps {
     user: User;
     isCurrent: boolean;
@@ -15,8 +13,6 @@ interface GroupUserProps {
 
 const GroupUserBox: React.FC<GroupUserProps> = ({ user, isCurrent }) => {
     const router = useRouter();
-    const session = useSession();
-    const currentUserEmail = session.data?.user?.email;
 
     const handleClick = useCallback(() => {
         if (!isCurrent) {
@@ -30,27 +26,26 @@ const GroupUserBox: React.FC<GroupUserProps> = ({ user, isCurrent }) => {
     }, [user, router, isCurrent])
 
     return (
-        <div key={user.id} onClick={handleClick} className="w-full relative flex items-center space-x-2 bg-white p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer gap-2">
+        <div key={user.id} onClick={handleClick} className="w-full relative flex items-center space-x-2 bg-white md:p-3 py-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer mg:gap-2 gap-1">
             <Avatar user={user} />
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 items-center">
                 <div className="focus:outline-none">
-                    <div className="flex flex-col mb-1">
-                        <p className="text-sm font-medium text-gray-900">{user.name}{
+                    <div className="flex flex-col ">
+                        <p className="text-xs md:text-sm font-medium text-gray-900">{user.name}{
                             isCurrent && <span className='text-xs p-2 font-semibold text-gray-500'>(You)
                             </span>}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
+                        <p className="text-xs md:text-sm text-gray-500">{user.email}</p>
                     </div>
                 </div>
             </div>
-
-            {/* {
-                !isCurrent ? (
+            <div className="hidden md:flex">
+                {!isCurrent &&
                     <div className="p-2  hover:text-sky-600">
                         <BsChatDots onCLick={handleClick} size={20} />
                     </div>
-                ) :
-                    <span className='text-xs p-2 font-semibold text-gray-500'>You</span>
-            } */}
+                }
+            </div>
+
         </div>
     );
 }

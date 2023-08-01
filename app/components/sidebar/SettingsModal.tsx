@@ -67,10 +67,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               Edit your public information.
             </p>
             
-            <h2 className="mt-4  leading-7 text-gray-900">
+            <h2 className="mt-4 text-sm leading-7 text-gray-900">
               Email
             </h2>
-            <p className="text-sm leading-6 text-gray-600">
+            <p className="text-sm leading-6 text-sky-600">
               {currentUser?.email}
             </p>
 
