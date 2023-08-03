@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import prisma from '@/app/libs/prismadb';
 import { NextResponse } from 'next/server';
-import { request } from 'http';
+import sendMail from '@/app/actions/sendMail';
 
 export async function POST(request: Request) {
     try {
@@ -21,21 +21,26 @@ export async function POST(request: Request) {
         });
 
         if (existingUser) {
-            console.log("User already exists");
             return NextResponse.json({ message: 'User already exists' }, { status: 400 });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        console.log(otp);
 
-        const user = await prisma.user.create({
-            data: {
-                email,
-                name,
-                hashedPassword,
-            }
-        });
-        console.log(user);
-        return NextResponse.json(user);
+        await sendMail({ email, name, otp, emailType: 'REGISTER' });
+
+
+        // const hashedPassword = await bcrypt.hash(password, 12);
+
+        // const user = await prisma.user.create({
+        //     data: {
+        //         email,
+        //         name,
+        //         hashedPassword,
+        //     }
+        // });
+        // console.log(user);
+        return NextResponse.json(otp);
     } catch (error) {
         return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
     }
